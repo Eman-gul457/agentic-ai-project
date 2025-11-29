@@ -16,15 +16,6 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                sh '''
-                pip install --upgrade pip
-                pip install -r requirements.txt
-                '''
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh '''
@@ -55,7 +46,7 @@ pipeline {
 
     post {
         success {
-            echo "🚀 Deployment successful! Agentic AI is running on port 8000."
+            echo "🚀 Deployment successful! Agentic AI running on port 8000"
         }
         failure {
             echo "❌ Build failed. Check logs."
