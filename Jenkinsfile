@@ -19,11 +19,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                python3 -m venv venv
-                source venv/bin/activate
                 pip install --upgrade pip
                 pip install -r requirements.txt
-                deactivate
                 '''
             }
         }
@@ -61,7 +58,7 @@ pipeline {
             echo "🚀 Deployment successful! Agentic AI is running on port 8000."
         }
         failure {
-            echo "❌ Build failed. Check the console output."
+            echo "❌ Build failed. Check logs."
         }
     }
 }
