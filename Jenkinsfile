@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        PROJECT_NAME = "agentic-ai"
         IMAGE_NAME = "agentic-ai-app"
         CONTAINER_NAME = "agentic-ai-container"
     }
@@ -11,7 +10,9 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                git credentialsId: 'github-creds', url: 'https://github.com/Eman-gul457/agentic-ai-project.git'
+                git branch: 'main',
+                    credentialsId: 'github-creds',
+                    url: 'https://github.com/Eman-gul457/agentic-ai-project.git'
             }
         }
 
@@ -20,6 +21,7 @@ pipeline {
                 sh '''
                 python3 -m venv venv
                 source venv/bin/activate
+                pip install --upgrade pip
                 pip install -r requirements.txt
                 deactivate
                 '''
@@ -37,7 +39,7 @@ pipeline {
         stage('Stop Old Container') {
             steps {
                 sh '''
-                if [ $(docker ps -aq -f name=$CONTAINER_NAME | wc -l) -gt 0 ]; then
+                if [ "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
                     docker stop $CONTAINER_NAME || true
                     docker rm $CONTAINER_NAME || true
                 fi
@@ -52,16 +54,14 @@ pipeline {
                 '''
             }
         }
-
     }
 
     post {
         success {
-            echo "🚀 Deployment Successful!"
+            echo "🚀 Deployment successful! Agentic AI is running on port 8000."
         }
         failure {
-            echo "❌ Build Failed!"
+            echo "❌ Build failed. Check the console output."
         }
     }
 }
-      
